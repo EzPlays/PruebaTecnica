@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "name": "Computador portatil",
+        "price": 3000000,
+        "img": "producto.jpg"
+    },
+    {
+        "id": 2,
+        "name": "Redmi 9",
+        "price": 500000,
+        "img": "producto.jpg"
+    },
+    {
+        "id": 3,
+        "name": "Mouse",
+        "price": 20000,
+        "img": "producto.jpg"
+    },
+    {
+        "id": 4,
+        "name": "Teclado",
+        "price": 40000,
+        "img": "producto.jpg"
+    },
+    {
+        "id": 5,
+        "name": "Kit de destornilladores",
+        "price": 10000,
+        "img": "producto.jpg"
+    }
+]

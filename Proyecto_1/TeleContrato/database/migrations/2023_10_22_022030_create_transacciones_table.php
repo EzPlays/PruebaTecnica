@@ -14,9 +14,8 @@ return new class extends Migration
         Schema::create('transacciones', function (Blueprint $table) {
             $table->id();
             $table->integer('codigo_contrato_id');
-            $table->decimal('valor_transaccion', 10, 2);
+            $table->integer('valor_transaccion');
             $table->timestamp('fecha_hora_pago');
-
             $table->foreign('codigo_contrato_id')->references('codigo_contrato')->on('contratos');
         });
     }

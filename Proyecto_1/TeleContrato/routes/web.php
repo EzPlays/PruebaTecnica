@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContratoController;
 use App\Http\Controllers\TransaccionController;
+use App\Http\Controllers\ClienteController;
 
 
 /*
@@ -16,10 +17,22 @@ use App\Http\Controllers\TransaccionController;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-})->name('home');
+// Route::get('/', function () {
+//     return view('index');
+// })->name('inicio');
 
-Route::resource('contratos', ContratoController::class);
+Route::get('/', [ContratoController::class, 'index'])->name('inicio');
 
-Route::resource('transaccion', TransaccionController::class);
+Route::get('clientes/create', [ClienteController::class, 'create'])->name('clientes.create');
+
+Route::post('clientes', [ClienteController::class, 'store'])->name('clientes.store');
+
+Route::get('saldo', [ContratoController::class, 'saldo'])->name('contratos.saldo');
+
+Route::resource('contratos', ContratoController::class)->only([
+    'create', 'store'
+]);
+
+Route::resource('transacciones', TransaccionController::class)->only([
+    'index', 'create', 'store', 'show'
+]);

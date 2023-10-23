@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cliente;
 use Illuminate\Http\Request;
 use App\Models\Contrato;
 
@@ -12,7 +13,10 @@ class ContratoController extends Controller
      */
     public function index()
     {
-        //
+        $contratos = Contrato::join('clientes', 'contratos.numero_de_cliente_id', '=', 'clientes.numero_de_cliente')
+            ->select('contratos.*', 'clientes.nombre as nombre_cliente')
+            ->get();
+        return view('index', ['contratos' => $contratos]);
     }
 
     /**
@@ -20,7 +24,8 @@ class ContratoController extends Controller
      */
     public function create()
     {
-        return view('contratos.create');
+        $clientes = Cliente::all();
+        return view('contratos.create', ['clientes' => $clientes]);
     }
 
     /**
@@ -28,8 +33,25 @@ class ContratoController extends Controller
      */
     public function store(Request $request)
     {
-        Contrato::create($request->all());
-        return redirect()->route('index');
+        $clientes = new Contrato;
+
+        $clientes->codigo_contrato = $request['codigo_contrato'];
+        $clientes->numero_de_cliente_id = $request['numero_de_cliente_id'];
+        $clientes->numero_de_línea = $request['numero_de_linea'];
+        $clientes->fecha_activacion = $request['fecha_de_activacion'];
+        $clientes->valor_plan = $request['valor_plan'];
+
+        $clientes->save();
+
+        return redirect('/');
+    }
+
+    public function saldo()
+    {
+        // $contratos = Contrato::join('clientes', 'contratos.numero_de_cliente_id', '=', 'clientes.numero_de_cliente')
+        //     ->select('contratos.*', 'clientes.nombre as nombre_cliente')
+        //     ->get();
+        return view('contratos.saldo');
     }
 
     /**
@@ -37,7 +59,7 @@ class ContratoController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return view('contratos.saldo');
     }
 
     /**

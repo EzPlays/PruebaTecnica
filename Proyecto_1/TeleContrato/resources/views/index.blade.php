@@ -1,26 +1,33 @@
 @extends('layouts.base')
 
 @section('content')
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="{{ route('home') }}">TeleContrato</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('contratos.create') }}">Crear Contrato</a>
-                    </li>
-                    <li class="nav-item">
-                        {{-- <a class="nav-link" href="{{ route('transacciones.create') }}">Registrar Transacción</a> --}}
-                    </li>
-                    <li class="nav-item">
-                        {{-- <a class="nav-link" href="{{ route('contratos.saldo') }}">Consultar Saldo</a> --}}
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+<div class="container">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Código de Contrato</th>
+                    <th>Nombre del Cliente</th>
+                    <th>Número de Cliente</th>
+                    <th>Número de Línea</th>
+                    <th>Fecha de Activación</th>
+                    <th>Valor del Plan</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($contratos as $contrato)
+                    <tr>
+                        <td>{{ $contrato->codigo_contrato }}</td>
+                        <td>{{ $contrato->nombre_cliente }}</td>
+                        <td>{{ $contrato->numero_de_cliente_id }}</td>
+                        <td>{{ $contrato->numero_de_línea }}</td>
+                        <td>{{ $contrato->fecha_activacion }}</td>
+                        <td>{{ $contrato->valor_plan }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
 @endsection

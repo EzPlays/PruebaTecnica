@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaccion extends Model
 {
+    public $timestamps = false;
+
     protected $table = 'transacciones';
 
     protected $fillable = ['codigo_contrato', 'valor_transaccion', 'fecha_hora_pago'];

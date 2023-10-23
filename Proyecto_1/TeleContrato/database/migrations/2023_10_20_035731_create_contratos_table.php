@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreign('numero_de_cliente_id')->references('numero_de_cliente')->on('clientes');
             $table->string('numero_de_línea');
             $table->date('fecha_activacion');
-            $table->float('valor_plan', 8, 2);
-            $table->boolean('estado');
+            $table->integer('valor_plan');
+            $table->boolean('estado')->default(true);
         });
     }
 

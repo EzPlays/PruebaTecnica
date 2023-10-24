@@ -34,5 +34,5 @@ Route::resource('contratos', ContratoController::class)->only([
 ]);
 
 Route::resource('transacciones', TransaccionController::class)->only([
-    'index', 'create', 'store', 'show'
+    'create', 'store'
 ]);

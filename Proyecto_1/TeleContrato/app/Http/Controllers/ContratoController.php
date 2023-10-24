@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cliente;
 use Illuminate\Http\Request;
 use App\Models\Contrato;
+use App\Models\Transaccion;
 
 class ContratoController extends Controller
 {
@@ -13,10 +14,13 @@ class ContratoController extends Controller
      */
     public function index()
     {
-        $contratos = Contrato::join('clientes', 'contratos.numero_de_cliente_id', '=', 'clientes.numero_de_cliente')
-            ->select('contratos.*', 'clientes.nombre as nombre_cliente')
+
+        $datosCompletos = Contrato::join('clientes', 'contratos.numero_de_cliente_id', '=', 'clientes.numero_de_cliente')
+            ->join('transacciones', 'contratos.codigo_contrato', '=', 'transacciones.codigo_contrato_id')
+            ->select('clientes.*', 'contratos.*', 'transacciones.*')
             ->get();
-        return view('index', ['contratos' => $contratos]);
+
+        return view('index', ['informes' => $datosCompletos]);
     }
 
     /**
@@ -33,25 +37,45 @@ class ContratoController extends Controller
      */
     public function store(Request $request)
     {
-        $clientes = new Contrato;
+        try {
+            $clientes = new Contrato;
 
-        $clientes->codigo_contrato = $request['codigo_contrato'];
-        $clientes->numero_de_cliente_id = $request['numero_de_cliente_id'];
-        $clientes->numero_de_línea = $request['numero_de_linea'];
-        $clientes->fecha_activacion = $request['fecha_de_activacion'];
-        $clientes->valor_plan = $request['valor_plan'];
+            $clientes->codigo_contrato = $request['codigo_contrato'];
+            $clientes->numero_de_cliente_id = $request['numero_de_cliente_id'];
+            $clientes->numero_de_línea = $request['numero_de_linea'];
+            $clientes->fecha_activacion = $request['fecha_de_activacion'];
+            $clientes->valor_plan = $request['valor_plan'];
 
-        $clientes->save();
+            $clientes->save();
 
-        return redirect('/');
+            return response()->json(['mensaje' => 'Contrato guardado']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Ocurrió un error al guardar', 'Exception' => $e]);
+        }
     }
 
     public function saldo()
     {
-        // $contratos = Contrato::join('clientes', 'contratos.numero_de_cliente_id', '=', 'clientes.numero_de_cliente')
-        //     ->select('contratos.*', 'clientes.nombre as nombre_cliente')
-        //     ->get();
-        return view('contratos.saldo');
+
+        $contratos = Contrato::all();
+
+        $saldoInfo = [];
+
+        foreach ($contratos as $contrato) {
+            $transaccion = Transaccion::where('codigo_contrato_id', $contrato->codigo_contrato)
+                ->orderBy('fecha_hora_pago')
+                ->first();
+
+            $totalPagos = Transaccion::where('codigo_contrato_id', $contrato->codigo_contrato)->sum('valor_transaccion');
+            $saldoPendiente = $contrato->valor_plan - $totalPagos;
+
+            $saldoInfo[$contrato->codigo_contrato] = [
+                'saldo_pendiente' => $saldoPendiente,
+                'ultima_transaccion' => $transaccion,
+            ];
+        }
+
+        return view('contratos.saldo', ['saldoInfo' => $saldoInfo]);
     }
 
     /**
@@ -59,7 +83,6 @@ class ContratoController extends Controller
      */
     public function show(string $id)
     {
-        return view('contratos.saldo');
     }
 
     /**
